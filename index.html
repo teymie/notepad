@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NotePad</title>
+    <link rel="stylesheet" href="notepad.css" />
+    <script src="notepad.js" defer></script>
+  </head>
+  <body>
+    <div class="all">
+      <div class="all1">
+        <div class="container">
+          <h1>My NotePad</h1>
+          <form action="">
+            <input
+              type="text"
+              id="note-heading"
+              placeholder="Write a title"
+            /><br />
+            <textarea
+              name=""
+              id="note-text"
+              placeholder="Write a note..."
+              rows="26"
+              cols="25"
+            ></textarea
+            ><br />
+            <div id="btn2">
+              <button id="add-btn">Add Note</button>
+              <button id="add-btn2">Delete All</button>
+            </div>
+          </form>
+        </div>
+        <div class="container2">
+          <h2>Your Notes</h2>
+          <hr />
+          <div id="notes"></div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
