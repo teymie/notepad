@@ -2,101 +2,99 @@ let addNote = document.getElementById("add-btn");
 let addTitle = document.getElementById("note-heading");
 let addText = document.getElementById("note-text");
 let delAll = document.getElementById("add-btn2");
+const noteEl = document.getElementById("notes");
+// getting item in the local storage and converting to object
+const notes = JSON.parse(localStorage.getItem('notes') || '[]')
+// fixes creating another note rather than editing the note
+let isUpdate = false, updateId
 addNote.addEventListener("click", function (e) {
+  e.preventDefault()
   console.log("hello");
   if (addText.value == "" || addTitle.value == "") {
     return alert("field cannot be empty");
   }
-  //   to get item from the local storage
-  let notes = localStorage.getItem("notes");
-
-  if (notes == null) {
-    notesObj = [];
-  } else {
-    //   to convert to an object,so as to push myObj
-    notesObj = JSON.parse(notes);
+ else {
+    let myObj = {
+      title: addTitle.value.trim(),
+      text: addText.value.trim(),
+    };
+  if (!isUpdate) {
+    
+    notes.push(myObj);
   }
-  let myObj = {
-    title: addTitle.value,
-    text: addText.value,
-  };
-  notesObj.push(myObj);
-  // to save the item to local storage
-  localStorage.setItem("notes", JSON.stringify(notesObj));
-  addText.value = "";
-  addTitle.value = "";
-  // function to refresh
-  showNotes();
+  else{
+    // PREVENTS A NEW NOTE FROM REPLACING THE EDITED NODE
+    isUpdate = false
+    notes[updateId]= myObj
+  }
+    // to save the item to local storage and convert back to string
+    localStorage.setItem("notes", JSON.stringify(notes));
+    addText.value = "";
+    addTitle.value = "";
+    // function to refresh
+    showNotes();
+  }
 });
-// to show notes
+
 
 function showNotes() {
-  let notes = localStorage.getItem("notes");
-  //   let notesObj;
-  if (notes == null) {
-    notesObj = [];
-  } else {
-    //   to convert to an object
-    notesObj = JSON.parse(notes);
-  }
-
-  let html = "";
-  notesObj.forEach(function (element, index) {
-    html += `
-       <div id="note">
+  //fix duplicate notes 
+  document.querySelectorAll('.note').forEach(note => note.remove())
+  notes.forEach(function (element, index) {
+   let html = `
+       <div class="note">
             <p class="note-counter">Note ${index + 1}</p>
             <h3 class="note-title">${element.title}</h3>
             <p class="note-text">${element.text}</p>
-            <button id ="${index}" onclick="deleteNote(this.id)" class="note-btn">Delete Note</button>
-            <button  id ="${index}" onclick="editNote(this.id)" class="note-btn edit-btn">Edit Note</button>
-           </div><hr />
+            <button   onclick="deleteNote(${index})" class="note-btn">Delete Note</button>
+            <button  class="note-btn edit-btn"  onclick="editNote(${index},'${element.title}','${element.text}')"> Edit Note</button>
+            <hr/>
+           </div>
        
        `;
+       noteEl.insertAdjacentHTML('afterend', html)
   });
-  let noteEl = document.querySelector("#notes");
-  if (notesObj.length != 0) {
-    noteEl.innerHTML = html;
-  } else {
+  if (notes.length == 0) {
     noteEl.innerHTML = "no notes yet";
   }
 }
+showNotes()
 // delete note
 function deleteNote(index) {
   let confirmDel = confirm("You are deleting this note");
   if (confirmDel == true) {
-    let notes = localStorage.getItem("notes");
+    // let notes = localStorage.getItem("notes");
 
-    if (notes == null) {
-      notesObj = [];
-    } else {
-      // to convert to an object
-      notesObj = JSON.parse(notes);
-    }
+    // if (notes == null) {
+    //   notesObj = [];
+    // } else {
+    //   // to convert to an object
+    //   notesObj = JSON.parse(notes);
+    // }
 
-    notesObj.splice(index, 1);
-    localStorage.setItem("notes", JSON.stringify(notesObj));
+    notes.splice(index, 1);
+    localStorage.setItem("notes", JSON.stringify(notes));
     showNotes();
   }
 }
 // edit note
-function editNote(index) {
-  let notes = localStorage.getItem("notes");
+function editNote(index , title , text) {
   if (addText.value !== "" || addTitle.value !== "") {
     return alert("Please clear the form before editing the note");
   }
-  if (notes == null) {
-    notesObj = [];
-  } else {
-    //   to convert to an object
-    notesObj = JSON.parse(notes);
+  
+  // notes.findIndex(function (element, index) {
+  else{
+    isUpdate = true
+    updateId = index
+    addTitle.value = title;
+    addText.value = text;
+    console.log(index , title , text);
   }
-  notesObj.findIndex(function (element, index) {
-    addTitle.value = element.title;
-    addText.value = element.text;
-  });
-  notesObj.splice(index, 1);
-  localStorage.setItem("notes", JSON.stringify(notesObj));
-  showNotes();
+  // });
+  // notes.splice(index, 1);
+  // localStorage.setItem("notes", JSON.stringify(notes));
+  // showNotes();
 }
 // delete all note
 delAll.addEventListener("click", function (e) {
