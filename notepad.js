@@ -54,23 +54,15 @@ function showNotes() {
        `;
        noteEl.insertAdjacentHTML('afterend', html)
   });
-  if (notes.length == 0) {
-    noteEl.innerHTML = "no notes yet";
-  }
+
+  
 }
 showNotes()
 // delete note
 function deleteNote(index) {
   let confirmDel = confirm("You are deleting this note");
   if (confirmDel == true) {
-    // let notes = localStorage.getItem("notes");
-
-    // if (notes == null) {
-    //   notesObj = [];
-    // } else {
-    //   // to convert to an object
-    //   notesObj = JSON.parse(notes);
-    // }
+   
 
     notes.splice(index, 1);
     localStorage.setItem("notes", JSON.stringify(notes));
@@ -83,7 +75,6 @@ function editNote(index , title , text) {
     return alert("Please clear the form before editing the note");
   }
   
-  // notes.findIndex(function (element, index) {
   else{
     isUpdate = true
     updateId = index
@@ -91,10 +82,7 @@ function editNote(index , title , text) {
     addText.value = text;
     console.log(index , title , text);
   }
-  // });
-  // notes.splice(index, 1);
-  // localStorage.setItem("notes", JSON.stringify(notes));
-  // showNotes();
+ 
 }
 // delete all note
 delAll.addEventListener("click", function (e) {
