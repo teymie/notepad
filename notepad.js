@@ -39,15 +39,17 @@ addNote.addEventListener("click", function (e) {
 
 function showNotes() {
   //fix duplicate notes 
-  document.querySelectorAll('.note').forEach(note => note.remove())
+  document.querySelectorAll('.note').forEach(button => button.remove())
   notes.forEach(function (element, index) {
+    // replaces all new line with a break so it can be stored on different line on the p-tag(where added notes are shown)
+    let filterText = element.text.replaceAll("\n", '<br/>');
    let html = `
        <div class="note">
             <p class="note-counter">Note ${index + 1}</p>
             <h3 class="note-title">${element.title}</h3>
-            <p class="note-text">${element.text}</p>
+            <p class="note-text">${filterText}</p>
             <button   onclick="deleteNote(${index})" class="note-btn">Delete Note</button>
-            <button  class="note-btn edit-btn"  onclick="editNote(${index},'${element.title}','${element.text}')"> Edit Note</button>
+            <button  class="note-btn edit-btn"  onclick="editNote(${index},'${element.title}','${filterText}')"> Edit Note</button>
             <hr/>
            </div>
        
@@ -70,7 +72,9 @@ function deleteNote(index) {
   }
 }
 // edit note
-function editNote(index , title , text) {
+function editNote(index , title , filterText) {
+  // replaces all break in the added notes with a new line to be able to get the format written in the note so it will be editable
+  let text = filterText.replaceAll('<br/>', '\r\n');
   if (addText.value !== "" || addTitle.value !== "") {
     return alert("Please clear the form before editing the note");
   }
